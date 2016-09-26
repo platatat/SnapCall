@@ -15,21 +15,23 @@ SnapCall provides a massive improvement over python libraries, but still falls s
 
 **Five Card Evals Per Second**
 
-	Pokerhand-Eval (Python) ... 100
-	Deuces (Python) ........... 250,000
+	Pokerhand-Eval (Python) ......... 100
+	Deuces (Python) ............. 250,000
+	SKPokerEval (C++) ........... 400,000
 	SnapCall (C#) ............. 7,500,000
-	Poker-Eval (C) ............ 30,000,000
+	Poker-Eval (C) ........... 30,000,000
 
 **Seven Card Evals Per Second**
 
-	Pokerhand-Eval (Python) ... 50
-	Deuces (Python) ........... 15,000
+	Pokerhand-Eval (Python) .......... 50
+	Deuces (Python) .............. 15,000
+	SKPokerEval (C++) ........... 140,000
 	SnapCall (C#) ............. 7,500,000
-	Poker-Eval (C) ............ 30,000,000
+	Poker-Eval (C) ........... 30,000,000
 
 <h2>Usage</h2>
 
-The Evaluator constructor with no arguments will create a new five card lookup table from scratch, which can then be saved to a file for later reuse. Note that each constructor is inclusive, so the seven card evaluator can evaluate five and six card hands as well.
+The Evaluator constructor called with no arguments will create a new five card lookup table from scratch, which can then be saved to a file for later reuse. Note that each constructor is inclusive, so the seven card evaluator can evaluate five and six card hands as well.
 ```c#
 var fiveCardEvaluator = new Evaluator();
 fiveCardEvaluator.WriteToFile("./eval_tables/five_card.ser");
