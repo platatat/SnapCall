@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HandEvaluation", "HandEvaluation.csproj", "{06EE5D69-0131-4B75-B7C1-58299916D952}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapCall", "SnapCall.csproj", "{06EE5D69-0131-4B75-B7C1-58299916D952}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "..\Benchmark\Benchmark.csproj", "{4D35F41B-FB83-4803-8695-B2DBA54A70EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{06EE5D69-0131-4B75-B7C1-58299916D952}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06EE5D69-0131-4B75-B7C1-58299916D952}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06EE5D69-0131-4B75-B7C1-58299916D952}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D35F41B-FB83-4803-8695-B2DBA54A70EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D35F41B-FB83-4803-8695-B2DBA54A70EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D35F41B-FB83-4803-8695-B2DBA54A70EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D35F41B-FB83-4803-8695-B2DBA54A70EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

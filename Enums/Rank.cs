@@ -1,4 +1,4 @@
-﻿namespace HandEvaluation.Enums
+﻿namespace SnapCall.Enums
 {
 	public enum Rank
 	{

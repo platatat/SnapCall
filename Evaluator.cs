@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utilities;
 using Combinatorics;
 
-namespace HandEvaluation
+namespace SnapCall
 {
 	using System.IO;
 
@@ -78,73 +77,6 @@ namespace HandEvaluation
 			if (debug) Console.WriteLine("Hand evaluator setup completed in {0:0.00}s", elapsed.TotalSeconds);
 		}
 
-		/// <summary>
-		/// Perfomance benchmarks for creation, load, save, and evaluation times for the Evaluator class. Tables will
-		/// be saved in the ./benchmark directory, and may be several GB in size if seven card evaluation is being
-		/// benchmarked.
-		/// </summary>
-		/// <param name="loadFactor"></param>
-		/// <param name="fiveCard"></param>
-		/// <param name="sixCard"></param>
-		/// <param name="sevenCard"></param>
-		public static void Benchmark(
-			double loadFactor,
-			bool fiveCard = true,
-			bool sixCard = false,
-			bool sevenCard = false)
-		{
-			Console.WriteLine("Running Hand Evaluation Benchmarks");
-			int testEvaluations = 1000000;
-
-			// Create benchmark directory
-			Directory.CreateDirectory("benchmark");
-
-			// Create new evaluator
-			DateTime checkpoint = DateTime.UtcNow;
-			var evaluator = new Evaluator(sixCard: sixCard, sevenCard: sevenCard, loadFactor: loadFactor, debug: true);
-			TimeSpan fiveCardCreationTime = DateTime.UtcNow - checkpoint;
-
-			// Save five card evaluator to disk
-			checkpoint = DateTime.UtcNow;
-			evaluator.SaveToFile("benchmark/five-card.ser");
-			TimeSpan saveTime = DateTime.UtcNow - checkpoint;
-
-			// Load five card evaluator from disk
-			checkpoint = DateTime.UtcNow;
-			evaluator = new Evaluator(fileName: "benchmark/five-card.ser");
-			TimeSpan loadTime = DateTime.UtcNow - checkpoint;
-
-			// Generate test hands
-			Console.WriteLine("Generating test hand bitmap");
-			var sourceSet = Enumerable.Range(0, 52).ToList();
-			var combinations = new Combinatorics.Collections.Combinations<int>(sourceSet, sevenCard ? 7 : sixCard ? 6 : 5);
-			var handBitmaps = new List<ulong>();
-			int count = 0;
-			foreach (List<int> cards in combinations)
-			{
-				if (count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, combinations.Count);
-				handBitmaps.Add(cards.Aggregate(0ul, (acc, el) => acc | (1ul << el)));
-			}
-
-			// Test five card evaluation speed
-			Console.WriteLine("Testing five card evaluation");
-			checkpoint = DateTime.UtcNow;
-			foreach (ulong bitmap in handBitmaps.Take(testEvaluations))
-			{
-				evaluator.Evaluate(bitmap);
-			}
-			TimeSpan evaluationTime = DateTime.UtcNow - checkpoint;
-
-			// Print benchmark metrics
-			Console.WriteLine("\n=======================\n== BENCHMARK RESULTS ==\n=======================\n");
-			Console.WriteLine("FIVE CARD EVALUATOR (load = {0})\n", loadFactor);
-			Console.WriteLine("Creation Time\t\t{0:0.00}s", fiveCardCreationTime.TotalSeconds);
-			Console.WriteLine("Save Time\t\t{0:0.00}s", saveTime.TotalSeconds);
-			Console.WriteLine("Load Time\t\t{0:0.00}s", loadTime.TotalSeconds);
-			Console.WriteLine("Evals Per Second\t{0:#,###,###}", testEvaluations / evaluationTime.TotalSeconds);
-			Console.WriteLine("\n");
-		}
-
 		public int Evaluate(ulong bitmap)
 		{
 			// Check if 2-card monte carlo map has an evaluation for this hand
@@ -207,7 +139,7 @@ namespace HandEvaluation
 			foreach (KeyValuePair<ulong, HandStrength> strength in handStrengths)
 			{
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, handStrengths.Count);
-				ListExtensions.BinaryInsert<HandStrength>(uniqueHandStrengths, strength.Value);
+				Utilities.BinaryInsert<HandStrength>(uniqueHandStrengths, strength.Value);
 			}
 			Console.WriteLine("{0} unique hand strengths", uniqueHandStrengths.Count);
 
@@ -219,7 +151,7 @@ namespace HandEvaluation
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, handBitmaps.Count);
 				var hand = new Hand(bitmap);
 				HandStrength strength = hand.GetStrength();
-				var equivalence = ListExtensions.BinarySearch<HandStrength>(uniqueHandStrengths, strength);
+				var equivalence = Utilities.BinarySearch<HandStrength>(uniqueHandStrengths, strength);
 				if (equivalence == null) throw new Exception(string.Format("{0} hand not found", hand));
 				else
 				{

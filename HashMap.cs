@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace HandEvaluation
+namespace SnapCall
 {
 	class HashMapEntry
 	{
