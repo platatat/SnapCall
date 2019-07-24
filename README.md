@@ -34,13 +34,13 @@ SnapCall provides a massive improvement over python libraries, but still falls s
 The Evaluator constructor called with no arguments will create a new five card lookup table from scratch, which can then be saved to a file for later reuse. Note that each constructor is inclusive, so the seven card evaluator can evaluate five and six card hands as well.
 ```c#
 var fiveCardEvaluator = new Evaluator();
-fiveCardEvaluator.WriteToFile("./eval_tables/five_card.ser");
+fiveCardEvaluator.SaveToFile("./eval_tables/five_card.ser");
 
 var sixCardEvaluator = new Evaluator(sixCard: true);
-sixCardEvaluator.WriteToFile("./eval_tables/six_card.ser");
+sixCardEvaluator.SaveToFile("./eval_tables/six_card.ser");
 
 var sevenCardEvaluator = new Evaluator(sixCard: true, sevenCard: true);
-sevenCardEvaluator.WriteToFile("./eval_tables/seven_card.ser");
+sevenCardEvaluator.SaveToFile("./eval_tables/seven_card.ser");
 ```
 
 First time table creation is slow - five card takes about a minute, six card about 10 minutes, and seven card can take over an hour. You'll only want to do this once, and then save the table to a file and reuse it. Loading a seven card table takes about 20 seconds, and five and six cards are less than 5 seconds.
