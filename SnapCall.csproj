@@ -49,11 +49,9 @@
   <ItemGroup>
     <Reference Include="Combinatorics, Version=1.0.3.0, Culture=neutral, PublicKeyToken=d5738f21cd5d2f66, processorArchitecture=MSIL">
       <HintPath>packages\Combinatorics.1.0.3.2\lib\net40\Combinatorics.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>packages\protobuf-net.2.1.0\lib\net451\protobuf-net.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
