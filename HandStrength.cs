@@ -9,8 +9,10 @@ namespace SnapCall
 	public class HandStrength : IComparable<HandStrength>
 	{
 		public HandRanking HandRanking { get; set; }
+		// Kickers are processed as underlying enum type of Rank from Card. See Hand.GetStrength 
 		public List<int> Kickers { get; set; }
 
+		// Standard CompareTo implementation. See CompareTo summary (mouseover)
 		public int CompareTo(HandStrength other)
 		{
 			if (this.HandRanking > other.HandRanking) return 1;
