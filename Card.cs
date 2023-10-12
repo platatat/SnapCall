@@ -15,9 +15,11 @@ namespace SnapCall
 		public Rank Rank { get; set; }
 		public Suit Suit { get; set; }
 
+		// Associates a prime number with every rank and suit
 		private static int[] rankPrimes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41 };
 		private static int[] suitPrimes = new int[] { 43, 47, 53, 59 };
 
+		// Uses underlying enum type as index to access values in rank-/suitPrimes arrays
 		public int PrimeRank { get { return rankPrimes[(int)Rank]; } }
 		public int PrimeSuit { get { return suitPrimes[(int)Suit]; } }
 
@@ -26,11 +28,13 @@ namespace SnapCall
 			return this.Rank == other.Rank && this.Suit == other.Suit;
 		}
 
+		// Multiplying prime numbers for rank and suit gives every card a hash code that is guaranteed to be unique
 		public int GetHashCode(Card c)
 		{
 			return c.PrimeRank * c.PrimeSuit;
 		}
 
+		// Used two chars as argument for card rank and suit, see switches below
 		public Card(string s)
 		{
 			var chars = s.ToUpper().ToCharArray();
