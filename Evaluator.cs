@@ -108,7 +108,9 @@ namespace SnapCall
 
 		private void GenerateFiveCardTable()
 		{
+			// Generate a list of 52 integers starting from 0 which represent all cards in a deck
 			var sourceSet = Enumerable.Range(0, 52).ToList();
+			// Generate all combinations of 5 from the 52 integers representing all possible 5 card hands
 			var combinations = new Combinatorics.Collections.Combinations<int>(sourceSet, 5);
 
 			// Generate all possible 5 card hand bitmaps
@@ -118,10 +120,11 @@ namespace SnapCall
 			foreach (List<int> values in combinations)
 			{
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, combinations.Count);
+				// Transform the integer card hands into a bitmap by left-shifting 1 by integer value while aggregating with a bitwise OR
 				handBitmaps.Add(values.Aggregate(0ul, (acc, el) => acc | (1ul << el)));
 			}
 
-			// Calculate hand strength of each hand
+			// Calculate hand strength of each hand by generating a Hand object from each bitmap and calling GetStrength
 			Console.WriteLine("Calculating hand strength");
 			var handStrengths = new Dictionary<ulong, HandStrength>();
 			count = 0;
@@ -139,6 +142,7 @@ namespace SnapCall
 			foreach (KeyValuePair<ulong, HandStrength> strength in handStrengths)
 			{
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, handStrengths.Count);
+				// BinaryInsert does not insert duplicates
 				Utilities.BinaryInsert<HandStrength>(uniqueHandStrengths, strength.Value);
 			}
 			Console.WriteLine("{0} unique hand strengths", uniqueHandStrengths.Count);
@@ -155,6 +159,7 @@ namespace SnapCall
 				if (equivalence == null) throw new Exception(string.Format("{0} hand not found", hand));
 				else
 				{
+					// The hand bitmap is the key, the handrank the item
 					handRankMap[bitmap] = (ulong) equivalence;
 				}
 			}
