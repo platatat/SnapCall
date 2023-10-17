@@ -143,6 +143,7 @@ namespace SnapCall
 			{
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, handStrengths.Count);
 				// BinaryInsert does not insert duplicates
+				// It also compares the HandStrengths, calling CompareTo, which also compares by kickers
 				Utilities.BinaryInsert<HandStrength>(uniqueHandStrengths, strength.Value);
 			}
 			Console.WriteLine("{0} unique hand strengths", uniqueHandStrengths.Count);
@@ -155,11 +156,12 @@ namespace SnapCall
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, handBitmaps.Count);
 				var hand = new Hand(bitmap);
 				HandStrength strength = hand.GetStrength();
+				// Equivalence is the index of the HandStrength in uniqueHandStrengths
 				var equivalence = Utilities.BinarySearch<HandStrength>(uniqueHandStrengths, strength);
 				if (equivalence == null) throw new Exception(string.Format("{0} hand not found", hand));
 				else
 				{
-					// The hand bitmap is the key, the handrank the item
+					// The hand bitmap is the key, the equivalence (hand strength ranking) is the item
 					handRankMap[bitmap] = (ulong) equivalence;
 				}
 			}
@@ -167,9 +169,14 @@ namespace SnapCall
 
 		private void GenerateSixCardTable()
 		{
+			// ToDo: Five card table was start = 0
 			var sourceSet = Enumerable.Range(1, 52).ToList();
-			var combinations = new Combinatorics.Collections.Combinations<int>(sourceSet, 6);
+            // Generate all combinations of 6 from the 52 integers representing all possible 6 card hands
+            var combinations = new Combinatorics.Collections.Combinations<int>(sourceSet, 6);
 			int count = 0;
+			// For every 6 card hand: Get all 5 card combinations (subsets),
+			// aggregate a bitmap for every subset and add its evaluation to subsetValues (from handRankMap (five card table)),
+			// then aggregate a bitmap for every 6 card hand and add it with its highest subsetValues evaluation to the handRankMap
 			foreach (List<int> cards in combinations)
 			{
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, combinations.Count);
@@ -187,10 +194,15 @@ namespace SnapCall
 
 		private void GenerateSevenCardTable()
 		{
-			var sourceSet = Enumerable.Range(1, 52).ToList();
-			var combinations = new Combinatorics.Collections.Combinations<int>(sourceSet, 7);
+            // ToDo: Five card table was start = 0
+            var sourceSet = Enumerable.Range(1, 52).ToList();
+            // Generate all combinations of 7 from the 52 integers representing all possible 7 card hands
+            var combinations = new Combinatorics.Collections.Combinations<int>(sourceSet, 7);
 			int count = 0;
-			foreach (List<int> cards in combinations)
+            // For every 7 card hand: Get all 6 card combinations (subsets),
+            // aggregate a bitmap for every subset and add its evaluation to subsetValues (from handRankMap (six card table)),
+            // then aggregate a bitmap for every 7 card hand and add it with its highest subsetValues evaluation to the handRankMap
+            foreach (List<int> cards in combinations)
 			{
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, combinations.Count);
 				var subsets = new Combinatorics.Collections.Combinations<int>(cards, 6);
