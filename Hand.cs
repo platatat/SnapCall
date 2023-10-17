@@ -20,6 +20,7 @@ namespace SnapCall
 			Cards = new List<Card>();
 		}
 
+		// ToDo: Add constructor from IEnumerable<Card>
 		public Hand(ulong bitmap)
 		{
 			char[] ranks = "23456789TJQKA".ToCharArray();
@@ -27,6 +28,8 @@ namespace SnapCall
 
 			Cards = new List<Card>();
 
+			// Left shift 1ul (unsigned long) by rank and suit.
+			// When a logical AND with the given bitmap is not 0 (meaning the corresponding card is in the bitmap) add the card to Cards.
 			for (int r = 0; r < ranks.Length; r++)
 			{
 				for (int s = 0; s < suits.Length; s++)
@@ -34,6 +37,7 @@ namespace SnapCall
 					var shift = r * 4 + s;
 					if (((1ul << shift) & bitmap) != 0)
 					{
+						// Card construction takes a 2 char string
 						Cards.Add(new Card(ranks[r].ToString() + suits[s].ToString()));
 					}
 				}
@@ -65,11 +69,14 @@ namespace SnapCall
 				var strength = new HandStrength();
 				strength.Kickers = new List<int>();
 
+				// Multiplying PrimeRank by 100 ensures that cards are ordered primarily by rank (ascending)
 				Cards = Cards.OrderBy(card => card.PrimeRank * 100 + card.PrimeSuit).ToList();
 
+				// Multiply all PrimeRanks/PrimeSuits as rankProduct/suitProduct,
+				// then match for known straight/flush products and assign to variable
 				int rankProduct = Cards.Select(card => card.PrimeRank).Aggregate((acc, r) => acc * r);
 				int suitProduct = Cards.Select(card => card.PrimeSuit).Aggregate((acc, r) => acc * r);
-
+			
 				bool straight =
 					rankProduct == 8610			// 5-high straight
 					|| rankProduct == 2310		// 6-high straight
@@ -88,6 +95,7 @@ namespace SnapCall
 					|| suitProduct == 418195493		// Diamonds
 					|| suitProduct == 714924299;    // Clubs
 
+				// Group cards by rank then check group counts and assign rank underlying enum value to corresponding count variable
 				var cardCounts = Cards.GroupBy(card => (int) card.Rank).Select(group => group).ToList();
 
 				var fourOfAKind = -1;
@@ -108,6 +116,7 @@ namespace SnapCall
 					}
 				}
 
+				// Resolve strength and kickers based on the previously assigned variables
 				if (straight && flush)
 				{
 					strength.HandRanking = HandRanking.StraightFlush;
