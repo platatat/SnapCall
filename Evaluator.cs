@@ -169,7 +169,7 @@ namespace SnapCall
 
 		private void GenerateSixCardTable()
 		{
-			// ToDo: Five card table was start = 0
+			// TODO: Five card table was start = 0
 			var sourceSet = Enumerable.Range(1, 52).ToList();
             // Generate all combinations of 6 from the 52 integers representing all possible 6 card hands
             var combinations = new Combinatorics.Collections.Combinations<int>(sourceSet, 6);
@@ -194,7 +194,7 @@ namespace SnapCall
 
 		private void GenerateSevenCardTable()
 		{
-            // ToDo: Five card table was start = 0
+            // TODO: Five card table was start = 0
             var sourceSet = Enumerable.Range(1, 52).ToList();
             // Generate all combinations of 7 from the 52 integers representing all possible 7 card hands
             var combinations = new Combinatorics.Collections.Combinations<int>(sourceSet, 7);

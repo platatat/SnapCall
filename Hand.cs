@@ -20,7 +20,7 @@ namespace SnapCall
 			Cards = new List<Card>();
 		}
 
-		// ToDo: Add constructor from IEnumerable<Card>
+		// TODO: Add constructor using IEnumerable<Card>
 		public Hand(ulong bitmap)
 		{
 			char[] ranks = "23456789TJQKA".ToCharArray();

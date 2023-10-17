@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 namespace SnapCall
 {
 	class HashMapEntry
-	{
+	{		
 		public ulong Key { get; set; }
 		public uint Value { get; set; }
 
@@ -39,11 +39,11 @@ namespace SnapCall
 	public class HashMap
 	{
 		[ProtoMember(1)]
-		private uint Size { get; set; }
+		private uint Size { get; set; } // Size of buckets
 		[ProtoMember(2)]
-		private uint Count { get; set; }
+		private uint Count { get; set; } // Count of buckets
 		[ProtoMember(3)]
-		private uint TotalSize { get; set; }
+		private uint TotalSize { get; set; } // Size * Count of Buckets
 		[ProtoMember(4)]
 		private List<ArrayWrapper> Data { get; set; }
 		[ProtoMember(5)]
@@ -53,11 +53,15 @@ namespace SnapCall
 
 		public HashMap(uint size)
 		{
+			// Multiply by 2 because keys and values are both saved next to each other in the buckets
 			TotalSize = size * 2;
+			// Multiply count of buckets (Count) by two as long as size of buckets (Size = TotalSize / Count) is greater than 10000000
 			Count = 1;
 			while (TotalSize / Count > 10000000) Count *= 2;
+			// Calculate size of buckets
 			Size = TotalSize / Count;
 			Data = new List<ArrayWrapper>();
+			// Set TotalSize property to be size of buckets (Size) times count of buckets (Count)
 			TotalSize = Size * Count;
 			for (int i = 0; i < Count; i++)
 			{
@@ -68,14 +72,19 @@ namespace SnapCall
 			Misses = 0;
 		}
 
-		public ulong this[ulong key]
+
+        // Subarrays contain key and value alternatingly
+        public ulong this[ulong key]
 		{
 			get
 			{
+				// % TotalSize means that index can be between 0 and TotalSize - 1
+				// Thus, index / Size is a number between 0 and count - 1 (perfect to access Data)
 				ulong index = (key * 2) % TotalSize;
 				int subarray = (int)(index / Size);
 				while (true)
 				{
+					// The same goes for % Size and Data[].Array[] here
 					if (Data[subarray].Array[index % Size] == key) return Data[subarray].Array[index % Size + 1];
 					index += 2;
 				}
