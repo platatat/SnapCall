@@ -67,6 +67,7 @@
     <Compile Include="Deck.cs" />
     <Compile Include="Enums\Rank.cs" />
     <Compile Include="Enums\Suit.cs" />
+    <Compile Include="Enums\HandRanking.cs" />
     <Compile Include="HashMap.cs" />
     <Compile Include="Evaluator.cs" />
     <Compile Include="Hand.cs" />

@@ -6,12 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnapCall
 {
-	public enum HandRanking
-	{
-		HighCard, Pair, TwoPair, ThreeOfAKind, Straight, Flush, FullHouse, FourOfAKind, StraightFlush
-	}
-
-	public class Hand
+    public class Hand
 	{
 		public IList<Card> Cards { get; set; }
 
