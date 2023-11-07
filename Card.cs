@@ -8,13 +8,12 @@ namespace SnapCall
 {
 	using Enums;
 
-    // TODO: Extract Interface
-    public class Card : IEquatable<Card>, ICard
+    public class Card : ICard
     {
         public static ConsoleColor[] SuitColors = { ConsoleColor.Green, ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green };
 
-        public Rank Rank { get; set; }
-        public Suit Suit { get; set; }
+        public Rank Rank { get; }
+        public Suit Suit { get; }
 
         // Associates a prime number with every rank and suit
         private static int[] rankPrimes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41 };
@@ -24,7 +23,7 @@ namespace SnapCall
         public int PrimeRank { get { return rankPrimes[(int)Rank]; } }
         public int PrimeSuit { get { return suitPrimes[(int)Suit]; } }
 
-        public bool Equals(Card other)
+        public bool Equals(ICard other)
         {
             return this.Rank == other.Rank && this.Suit == other.Suit;
         }

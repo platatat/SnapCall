@@ -3,7 +3,7 @@ using System;
 
 namespace SnapCall
 {
-    public interface ICard
+    public interface ICard : IEquatable<ICard>
     {
         int PrimeRank { get; }
         int PrimeSuit { get; }
