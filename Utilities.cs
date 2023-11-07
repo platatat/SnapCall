@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnapCall
 {
+    // TODO: Add method to get bitmap from a collection of cards
     public static class Utilities
     {
         public static uint? BinarySearch<T>(this IList<T> list, IComparable<T> item)

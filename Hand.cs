@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SnapCall
 {
+	// TODO: Extract Interface
+	// Implement IEnumerable<ICard>
+	// Create Factory
     public class Hand
 	{
 		public IList<Card> Cards { get; set; }
@@ -15,7 +18,6 @@ namespace SnapCall
 			Cards = new List<Card>();
 		}
 
-		// TODO: Add constructor using IEnumerable<Card>
 		public Hand(ulong bitmap)
 		{
 			char[] ranks = "23456789TJQKA".ToCharArray();

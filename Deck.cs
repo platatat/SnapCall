@@ -47,6 +47,7 @@ namespace SnapCall
 			position = 0;
 		}
 
+		// TODO: Draw actual cards
 		public ulong Draw(int count)
 		{
 			ulong hand = 0;

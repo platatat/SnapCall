@@ -8,6 +8,7 @@ namespace SnapCall
 {
 	using Enums;
 
+	// TODO: Extract Interface
 	public class Card : IEquatable<Card>
     {
 		public static ConsoleColor[] SuitColors = { ConsoleColor.Green, ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green };
