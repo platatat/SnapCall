@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,15 +7,14 @@ using System.Threading.Tasks;
 
 namespace SnapCall
 {
-    // Implement IEnumerable<ICard>
     // Create Factory
-    public class Hand : IHand
+    public class Hand : IHand, IEnumerable<ICard>
     {
-        public IList<Card> Cards { get; set; }
+        public IList<ICard> Cards { get; set; }
 
         public Hand()
         {
-            Cards = new List<Card>();
+            Cards = new List<ICard>();
         }
 
         public Hand(ulong bitmap)
@@ -22,7 +22,7 @@ namespace SnapCall
             char[] ranks = "23456789TJQKA".ToCharArray();
             char[] suits = "SHDC".ToCharArray();
 
-            Cards = new List<Card>();
+            Cards = new List<ICard>();
 
             // Left shift 1ul (unsigned long) by rank and suit.
             // When a logical AND with the given bitmap is not 0 (meaning the corresponding card is in the bitmap) add the card to Cards.
@@ -44,7 +44,7 @@ namespace SnapCall
         {
             for (int i = 0; i < Cards.Count; i++)
             {
-                Card card = Cards.ElementAt(i);
+                var card = Cards.ElementAt(i);
                 Console.ForegroundColor = Card.SuitColors[(int)card.Suit];
                 Console.Write("{0}", card);
                 if (i < Cards.Count - 1) Console.Write(" ");
@@ -186,6 +186,16 @@ namespace SnapCall
             {
                 return null;
             }
+        }
+
+        public IEnumerator<ICard> GetEnumerator()
+        {
+            return Cards.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)Cards).GetEnumerator();
         }
     }
 }

@@ -4,7 +4,7 @@ namespace SnapCall
 {
     public interface IHand
     {
-        IList<Card> Cards { get; set; }
+        IList<ICard> Cards { get; set; }
 
         HandStrength GetStrength();
     }
