@@ -75,25 +75,25 @@ namespace SnapCall
 				int suitProduct = Cards.Select(card => card.PrimeSuit).Aggregate((acc, r) => acc * r);
 			
 				bool straight =
-					rankProduct == 8610			// 5-high straight
-					|| rankProduct == 2310		// 6-high straight
-					|| rankProduct == 15015		// 7-high straight
-					|| rankProduct == 85085		// 8-high straight
-					|| rankProduct == 323323	// 9-high straight
-					|| rankProduct == 1062347	// T-high straight
-					|| rankProduct == 2800733	// J-high straight
-					|| rankProduct == 6678671	// Q-high straight
-					|| rankProduct == 14535931	// K-high straight
+                    rankProduct == 8610         // 5-high straight
+                    || rankProduct == 2310      // 6-high straight
+                    || rankProduct == 15015     // 7-high straight
+                    || rankProduct == 85085     // 8-high straight
+                    || rankProduct == 323323    // 9-high straight
+                    || rankProduct == 1062347   // T-high straight
+                    || rankProduct == 2800733   // J-high straight
+                    || rankProduct == 6678671   // Q-high straight
+                    || rankProduct == 14535931  // K-high straight
 					|| rankProduct == 31367009; // A-high straight
 
 				bool flush = 
-					suitProduct == 147008443		// Spades
-					|| suitProduct == 229345007		// Hearts
-					|| suitProduct == 418195493		// Diamonds
+                    suitProduct == 147008443        // Spades
+                    || suitProduct == 229345007     // Hearts
+                    || suitProduct == 418195493     // Diamonds
 					|| suitProduct == 714924299;    // Clubs
 
 				// Group cards by rank then check group counts and assign rank underlying enum value to corresponding count variable
-				var cardCounts = Cards.GroupBy(card => (int) card.Rank).Select(group => group).ToList();
+                var cardCounts = Cards.GroupBy(card => (int)card.Rank).Select(group => group).ToList();
 
 				var fourOfAKind = -1;
 				var threeOfAKind = -1;
