@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace SnapCall
 {
-    // TODO: Add method to get bitmap from an enumerable of cards
     public static class Utilities
     {
         public static uint? BinarySearch<T>(this IList<T> list, IComparable<T> item)
@@ -78,6 +77,17 @@ namespace SnapCall
                     }
                 }
             }
+        }
+
+        public static ulong GetBitmapFrom(IEnumerable<ICard> cards)
+        {
+            ulong bitmap = 0;
+            foreach (var card in cards) 
+            {
+                bitmap |= 1ul << ((int)card.Rank * 4 + (int)card.Suit);
+            }
+
+            return bitmap;
         }
     }
 }
