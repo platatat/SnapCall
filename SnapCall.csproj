@@ -68,6 +68,7 @@
     <Compile Include="Enums\Rank.cs" />
     <Compile Include="Enums\Suit.cs" />
     <Compile Include="Enums\HandRanking.cs" />
+    <Compile Include="HandFactory.cs" />
     <Compile Include="HashMap.cs" />
     <Compile Include="Evaluator.cs" />
     <Compile Include="Hand.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="ICard.cs" />
     <Compile Include="IDeck.cs" />
     <Compile Include="IHand.cs" />
+    <Compile Include="IHandFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>

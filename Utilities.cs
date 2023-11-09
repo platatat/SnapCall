@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnapCall
 {
-    // TODO: Add method to get bitmap from a collection of cards
+    // TODO: Add method to get bitmap from an enumerable of cards
     public static class Utilities
     {
         public static uint? BinarySearch<T>(this IList<T> list, IComparable<T> item)
@@ -56,6 +56,27 @@ namespace SnapCall
                 else if (comparison < 0) high = index - 1;
                 // If the item is equal, meaning already in the list, return null
                 else return null;
+            }
+        }
+
+        public static IEnumerable<ICard> GetCardsFromBitmap(this ulong bitmap)
+        {
+            char[] ranks = "23456789TJQKA".ToCharArray();
+            char[] suits = "SHDC".ToCharArray();
+
+            // Left shift 1ul (unsigned long) by rank and suit.
+            // When a logical AND with the given bitmap is not 0 (meaning the corresponding card is in the bitmap) add the card to Cards.
+            for (int r = 0; r < ranks.Length; r++)
+            {
+                for (int s = 0; s < suits.Length; s++)
+                {
+                    var shift = r * 4 + s;
+                    if (((1ul << shift) & bitmap) != 0)
+                    {
+                        // Card construction takes a 2 char string
+                        yield return new Card(ranks[r].ToString() + suits[s].ToString());
+                    }
+                }
             }
         }
     }

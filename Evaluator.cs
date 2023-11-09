@@ -13,6 +13,7 @@ namespace SnapCall
 	{
 		private bool debug;
 		private HashMap handRankMap;
+		private Lazy<IHandFactory> HandFactory { get; } = new Lazy<IHandFactory>(() => new HandFactory());
 
 		public Evaluator(
 			string fileName =	null,
@@ -22,6 +23,7 @@ namespace SnapCall
 			double loadFactor =	1.25,
 			bool debug =		true)
 		{
+
 			DateTime start = DateTime.UtcNow;
 			this.debug = debug;
 
@@ -116,8 +118,8 @@ namespace SnapCall
 			foreach (ulong bitmap in handBitmaps)
 			{
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, handBitmaps.Count);
-				var hand = new Hand(bitmap);
-				handStrengths.Add(bitmap, hand.GetStrength());
+                var hand = HandFactory.Value.Create(bitmap);
+                handStrengths.Add(bitmap, hand.GetStrength());
 			}
 
 			// Generate a list of all unique hand strengths
@@ -139,7 +141,7 @@ namespace SnapCall
 			foreach (ulong bitmap in handBitmaps)
 			{
 				if (debug && count++ % 1000 == 0) Console.Write("{0} / {1}\r", count, handBitmaps.Count);
-				var hand = new Hand(bitmap);
+				var hand = HandFactory.Value.Create(bitmap);
 				HandStrength strength = hand.GetStrength();
 				// Equivalence is the index of the HandStrength in uniqueHandStrengths
 				var equivalence = Utilities.BinarySearch<HandStrength>(uniqueHandStrengths, strength);

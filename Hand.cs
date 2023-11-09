@@ -7,38 +7,21 @@ using System.Threading.Tasks;
 
 namespace SnapCall
 {
-    // Create Factory
-    public class Hand : IHand, IEnumerable<ICard>
+    public class Hand : IHand
     {
-        public IList<ICard> Cards { get; set; }
+        private IList<ICard> Cards { get; }
 
         public Hand()
         {
             Cards = new List<ICard>();
         }
 
-        public Hand(ulong bitmap)
+        public Hand(IEnumerable<ICard> cards)
         {
-            char[] ranks = "23456789TJQKA".ToCharArray();
-            char[] suits = "SHDC".ToCharArray();
-
-            Cards = new List<ICard>();
-
-            // Left shift 1ul (unsigned long) by rank and suit.
-            // When a logical AND with the given bitmap is not 0 (meaning the corresponding card is in the bitmap) add the card to Cards.
-            for (int r = 0; r < ranks.Length; r++)
-            {
-                for (int s = 0; s < suits.Length; s++)
-                {
-                    var shift = r * 4 + s;
-                    if (((1ul << shift) & bitmap) != 0)
-                    {
-                        // Card construction takes a 2 char string
-                        Cards.Add(new Card(ranks[r].ToString() + suits[s].ToString()));
-                    }
-                }
-            }
+            Cards = cards.ToList();          
         }
+
+        public Hand(ulong bitmap) : this(bitmap.GetCardsFromBitmap()) { }
 
         public void PrintColoredCards(string end = "")
         {
@@ -66,12 +49,12 @@ namespace SnapCall
                 strength.Kickers = new List<int>();
 
                 // Multiplying PrimeRank by 100 ensures that cards are ordered primarily by rank (ascending)
-                Cards = Cards.OrderBy(card => card.PrimeRank * 100 + card.PrimeSuit).ToList();
+                var orderedCards = Cards.OrderBy(card => card.PrimeRank * 100 + card.PrimeSuit).ToList();
 
                 // Multiply all PrimeRanks/PrimeSuits as rankProduct/suitProduct,
                 // then match for known straight/flush products and assign to variable
-                int rankProduct = Cards.Select(card => card.PrimeRank).Aggregate((acc, r) => acc * r);
-                int suitProduct = Cards.Select(card => card.PrimeSuit).Aggregate((acc, r) => acc * r);
+                int rankProduct = orderedCards.Select(card => card.PrimeRank).Aggregate((acc, r) => acc * r);
+                int suitProduct = orderedCards.Select(card => card.PrimeSuit).Aggregate((acc, r) => acc * r);
 
                 bool straight =
                     rankProduct == 8610         // 5-high straight
@@ -92,7 +75,7 @@ namespace SnapCall
                     || suitProduct == 714924299;    // Clubs
 
                 // Group cards by rank then check group counts and assign rank underlying enum value to corresponding count variable
-                var cardCounts = Cards.GroupBy(card => (int)card.Rank).Select(group => group).ToList();
+                var cardCounts = orderedCards.GroupBy(card => (int)card.Rank).Select(group => group).ToList();
 
                 var fourOfAKind = -1;
                 var threeOfAKind = -1;
@@ -116,13 +99,13 @@ namespace SnapCall
                 if (straight && flush)
                 {
                     strength.HandRanking = HandRanking.StraightFlush;
-                    strength.Kickers = Cards.Select(card => (int)card.Rank).Reverse().ToList();
+                    strength.Kickers = orderedCards.Select(card => (int)card.Rank).Reverse().ToList();
                 }
                 else if (fourOfAKind >= 0)
                 {
                     strength.HandRanking = HandRanking.FourOfAKind;
                     strength.Kickers.Add(fourOfAKind);
-                    strength.Kickers.AddRange(Cards
+                    strength.Kickers.AddRange(orderedCards
                         .Where(card => (int)card.Rank != fourOfAKind)
                         .Select(card => (int)card.Rank));
                 }
@@ -135,14 +118,14 @@ namespace SnapCall
                 else if (flush)
                 {
                     strength.HandRanking = HandRanking.Flush;
-                    strength.Kickers.AddRange(Cards
+                    strength.Kickers.AddRange(orderedCards
                         .Select(card => (int)card.Rank)
                         .Reverse());
                 }
                 else if (straight)
                 {
                     strength.HandRanking = HandRanking.Straight;
-                    strength.Kickers.AddRange(Cards
+                    strength.Kickers.AddRange(orderedCards
                         .Select(card => (int)card.Rank)
                         .Reverse());
                 }
@@ -150,7 +133,7 @@ namespace SnapCall
                 {
                     strength.HandRanking = HandRanking.ThreeOfAKind;
                     strength.Kickers.Add(threeOfAKind);
-                    strength.Kickers.AddRange(Cards
+                    strength.Kickers.AddRange(orderedCards
                         .Where(card => (int)card.Rank != threeOfAKind)
                         .Select(card => (int)card.Rank));
                 }
@@ -159,7 +142,7 @@ namespace SnapCall
                     strength.HandRanking = HandRanking.TwoPair;
                     strength.Kickers.Add(Math.Max(twoPair, onePair));
                     strength.Kickers.Add(Math.Min(twoPair, onePair));
-                    strength.Kickers.AddRange(Cards
+                    strength.Kickers.AddRange(orderedCards
                         .Where(card => (int)card.Rank != twoPair && (int)card.Rank != onePair)
                         .Select(card => (int)card.Rank));
                 }
@@ -167,21 +150,20 @@ namespace SnapCall
                 {
                     strength.HandRanking = HandRanking.Pair;
                     strength.Kickers.Add(onePair);
-                    strength.Kickers.AddRange(Cards
+                    strength.Kickers.AddRange(orderedCards
                         .Where(card => (int)card.Rank != onePair)
                         .Select(card => (int)card.Rank));
                 }
                 else
                 {
                     strength.HandRanking = HandRanking.HighCard;
-                    strength.Kickers.AddRange(Cards
+                    strength.Kickers.AddRange(orderedCards
                         .Select(card => (int)card.Rank)
                         .Reverse());
                 }
 
                 return strength;
             }
-
             else
             {
                 return null;
